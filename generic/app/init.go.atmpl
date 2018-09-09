@@ -6,13 +6,10 @@ package main
 import ({{ if .App.IsSecurityEnabled }}
 	"{{ .App.ImportPath }}/app/security"{{ end }}
 
-	"aahframework.org/aah.v0"{{ if .App.IsWebApp }}
+	"aahframe.work/aah"{{ if .App.IsWebApp }}
 
 	// Registering HTML minifier
-	_ "github.com/aah-cb/minify"{{ end }}{{ if eq .App.ViewEngine "pug" }}
-
-	// Registering Pug View Engine (formerly known as Jade)
-	_ "github.com/aah-cb/ve-pug"{{ end }}
+	_ "aahframe.work/minify"{{ end }}
 )
 
 func init() {
