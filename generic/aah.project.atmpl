@@ -81,9 +81,9 @@ hot_reload {
   watch {
     # Note: static directory is not required to be monitored since aah server
     # delivers up-to-date file on environment profile `dev`.
-    dir_excludes = [".*"]
+    dir_excludes = [".*", "vendor", "build", "logs"]
 
-    file_excludes = [".*", "_test.go", "LICENSE", "README.md"]
+    file_excludes = [".*", "*.pid", "_test.go", "LICENSE", "README.md"]
   }
 }
 
