@@ -9,7 +9,7 @@ import ({{ if .App.IsSecurityEnabled }}
 	"aahframe.work/aah"{{ if .App.IsWebApp }}
 
 	// Registering HTML minifier
-	_ "aahframe.work/minify"{{ end }}
+	// _ "aahframe.work/html-minify"{{ end }}
 )
 
 func init() {
