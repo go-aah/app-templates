@@ -6,10 +6,10 @@ package main
 import ({{ if .App.IsSecurityEnabled }}
 	"{{ .App.ImportPath }}/app/security"{{ end }}
 
-	"aahframe.work/aah"{{ if .App.IsWebApp }}
+	"aahframe.work"{{ if .App.IsWebApp }}
 
 	// Registering HTML minifier
-	// _ "aahframe.work/html-minify"{{ end }}
+	_ "aahframe.work/minify/html"{{ end }}
 )
 
 func init() {

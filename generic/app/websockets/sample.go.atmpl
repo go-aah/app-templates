@@ -3,8 +3,8 @@ package websockets
 import (
 	"strings"
 
-	"aahframe.work/aah"
-	"aahframe.work/aah/ws"
+	"aahframe.work"
+	"aahframe.work/ws"
 
   "{{ .App.ImportPath }}/app/models"
 )

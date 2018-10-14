@@ -3,8 +3,8 @@ package v1
 import (
 	"fmt"
 
-	"aahframe.work/aah"
-	"aahframe.work/aah/ahttp"
+	"aahframe.work"
+	"aahframe.work/ahttp"
 
 	"{{ .App.ImportPath }}/app/models"
 )
