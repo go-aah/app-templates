@@ -18,13 +18,7 @@ func init() {
 	//‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 	// Server Extensions
 	// Doc: https://docs.aahframework.org/server-extension.html
-	//__________________________________________________________________________
-
-	// Event: OnStart
-	// Doc: https://docs.aahframework.org/server-extension.html#event-onstart
-	//
-	// app.OnStart(db.Connect)
-	// app.OnStart(cache.Load){{ if or .App.IsWebApp .App.IsAPIApp }}
+	//__________________________________________________________________________ {{ if or .App.IsWebApp .App.IsAPIApp }}
 	app.OnStart(SubscribeHTTPEvents){{ end }}{{ if or .App.IsWebSocketApp .App.IsSubTypeWebSocket }}
 	app.OnStart(SubscribeWebSocketEvents){{ end }}
 
@@ -79,10 +73,10 @@ func init() {
 }{{ if or .App.IsWebApp .App.IsAPIApp }}
 
 // SubscribeHTTPEvents method subscribes to HTTP events on app start.
-//
 // Doc: https://docs.aahframework.org/server-extension.html
-func SubscribeHTTPEvents(_ *aah.Event) {
-	{{ if not .App.IsSecurityEnabled }}//{{ end }} he := aah.App().HTTPEngine()
+func SubscribeHTTPEvents(_ *aah.Event) { {{ if eq .App.IsSecurityEnabled (not .App.IsBasicAuthFileRealm) }}
+	he := aah.App().HTTPEngine(){{ else }}
+	// he := aah.App().HTTPEngine(){{ end }}
 	// he.OnRequest(myserverext.OnRequest)
 	// he.OnPreReply(myserverext.OnPreReply)
 	// he.OnHeaderReply(myserverext.OnHeaderReply)
@@ -94,7 +88,6 @@ func SubscribeHTTPEvents(_ *aah.Event) {
 {{ end }}{{ if or .App.IsWebSocketApp .App.IsSubTypeWebSocket }}
 
 // SubscribeWebSocketEvents method subscribes to WebSocket events on app start.
-//
 // Doc: https://docs.aahframework.org/websocket.html#events
 func SubscribeWebSocketEvents(_ *aah.Event) {
   // wse := aah.App().WSEngine()
