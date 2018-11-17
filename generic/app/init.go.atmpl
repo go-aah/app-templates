@@ -87,7 +87,7 @@ func SubscribeHTTPEvents(_ *aah.Event) {
 	// he.OnPreReply(myserverext.OnPreReply)
 	// he.OnHeaderReply(myserverext.OnHeaderReply)
 	// he.OnPostReply(myserverext.OnPostReply)
-	// he.OnPreAuth(myserverext.OnPreAuth){{ if .App.IsSecurityEnabled }}
+	// he.OnPreAuth(myserverext.OnPreAuth){{ if eq .App.IsSecurityEnabled (not .App.IsBasicAuthFileRealm) }}
 	he.OnPostAuth(security.PostAuthEvent){{ else }}
 	// he.OnPostAuth(myserverext.PostAuthEvent){{ end }}
 }
