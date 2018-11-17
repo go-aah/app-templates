@@ -4,7 +4,7 @@
 package main
 
 import (
-	"aahframe.work"{{ if .App.IsSecurityEnabled }}
+	"aahframe.work"{{ if eq .App.IsSecurityEnabled (not .App.IsBasicAuthFileRealm) }}
 	
 	"{{ .App.ImportPath }}/app/security"{{ end }}{{ if .App.IsWebApp }}
 
