@@ -1,2 +1,3 @@
-# app-templates
-quick start templates by aah framework
+# Application Template
+
+    * generic - quick start aah application template

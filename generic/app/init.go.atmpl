@@ -3,54 +3,30 @@
 
 package main
 
-import ({{ if .App.IsSecurityEnabled }}
-	"{{ .App.ImportPath }}/app/security"{{ end }}
-
-	"aahframe.work"{{ if .App.IsWebApp }}
+import (
+	"aahframe.work"{{ if .App.IsSecurityEnabled }}
+	
+	"{{ .App.ImportPath }}/app/security"{{ end }}{{ if .App.IsWebApp }}
 
 	// Registering HTML minifier
 	_ "aahframe.work/minify/html"{{ end }}
 )
 
 func init() {
+	app := aah.App()
 
 	//‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 	// Server Extensions
 	// Doc: https://docs.aahframework.org/server-extension.html
-	//
-	// Best Practice: Define a function with meaningful name in a package and
-	// register it here. Extensions function name gets logged in the log,
-	// its very helpful to have meaningful log information.
-	//
-	// Such as:
-	//    - Dedicated package for config loading
-	//    - Dedicated package for datasource connections
-	//    - etc
 	//__________________________________________________________________________
-
-	// Event: OnInit
-	// Doc: https://docs.aahframework.org/server-extension.html#event-oninit
-	//
-	// aah.OnInit(config.LoadRemote)
 
 	// Event: OnStart
 	// Doc: https://docs.aahframework.org/server-extension.html#event-onstart
 	//
-	// aah.OnStart(db.Connect)
-	// aah.OnStart(cache.Load){{ if or .App.IsWebApp .App.IsAPIApp }}
-	aah.OnStart(SubscribeHTTPEvents){{ end }}{{ if or .App.IsWebSocketApp .App.IsSubTypeWebSocket }}
-	aah.OnStart(SubscribeWebSocketEvents){{ end }}
-
-	// Event: OnPreShutdown
-	// Doc: https://docs.aahframework.org/server-extension.html#event-onpreshutdown
-	//
-	// aah.OnPreShutdown(notify.AnnounceImGonnaShutdown)
-
-	// Event: OnPostShutdown
-	// Doc: https://docs.aahframework.org/server-extension.html#event-onpostshutdown
-	//
-	// aah.OnPostShutdown(cache.Flush)
-	// aah.OnPostShutdown(db.Disconnect)
+	// app.OnStart(db.Connect)
+	// app.OnStart(cache.Load){{ if or .App.IsWebApp .App.IsAPIApp }}
+	app.OnStart(SubscribeHTTPEvents){{ end }}{{ if or .App.IsWebSocketApp .App.IsSubTypeWebSocket }}
+	app.OnStart(SubscribeWebSocketEvents){{ end }}
 
 	{{ if not .App.IsWebSocketApp }}//‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 	// Middleware's
@@ -59,7 +35,7 @@ func init() {
 	// Executed in the order they are defined. It is recommended; NOT to change
 	// the order of pre-defined aah framework middleware's.
 	//__________________________________________________________________________
-	aah.AppHTTPEngine().Middlewares(
+	app.HTTPEngine().Middlewares(
 		aah.RouteMiddleware,
 		aah.CORSMiddleware,
 		aah.BindMiddleware,{{ if .App.IsWebApp }}
@@ -77,13 +53,13 @@ func init() {
 	// Add Application Error Handler
 	// Doc: https://docs.aahframework.org/error-handling.html
 	//__________________________________________________________________________
-	// aah.SetErrorHandler(AppErrorHandler){{ end }}{{ if .App.IsWebApp }}
+	// app.SetErrorHandler(AppErrorHandler){{ end }}{{ if .App.IsWebApp }}
 
 	//‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 	// Add Custom Template Functions
 	// Doc: https://docs.aahframework.org/template-funcs.html
 	//__________________________________________________________________________
-	// aah.AddTemplateFunc(template.FuncMap{
+	// app.AddTemplateFunc(template.FuncMap{
 	// // ...
 	// })
 
@@ -91,100 +67,42 @@ func init() {
 	// Add Custom Session Store
 	// Doc: https://docs.aahframework.org/session.html
 	//__________________________________________________________________________
-	// aah.AddSessionStore("redis", &RedisSessionStore{})
+	// app.AddSessionStore("redis", &RedisSessionStore{})
 
 	{{ end }}//‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 	// Add Custom Value Parser
 	// Doc: https://docs.aahframework.org/request-parameters-auto-bind.html
 	//__________________________________________________________________________
-	// if err := aah.AddValueParser(reflect.TypeOf(CustomType{}), customParser); err != nil {
+	// if err := app.AddValueParser(reflect.TypeOf(CustomType{}), customParser); err != nil {
 	//   log.Error(err)
 	// }
-
-	//‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
-	// Add Custom Validation Functions
-	// Doc: https://godoc.org/gopkg.in/go-playground/validator.v9
-	//__________________________________________________________________________
-	// Obtain aah validator instance, then add yours
-	// validator := aah.Validator()
-	//
-	// // Add your validation funcs
-
 }{{ if or .App.IsWebApp .App.IsAPIApp }}
 
-//‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
-// HTTP Events
+// SubscribeHTTPEvents method subscribes to HTTP events on app start.
 //
-// Subscribing HTTP events on app start.
-//__________________________________________________________________________
-
+// Doc: https://docs.aahframework.org/server-extension.html
 func SubscribeHTTPEvents(_ *aah.Event) {
-	{{ if not .App.IsSecurityEnabled }}//{{ end }} he := aah.AppHTTPEngine()
-
-	// Event: OnRequest
-	// Doc: https://docs.aahframework.org/server-extension.html#event-onrequest
-	//
+	{{ if not .App.IsSecurityEnabled }}//{{ end }} he := aah.App().HTTPEngine()
 	// he.OnRequest(myserverext.OnRequest)
-
-	// Event: OnPreReply
-	// Doc: https://docs.aahframework.org/server-extension.html#event-onprereply
-	//
 	// he.OnPreReply(myserverext.OnPreReply)
-
-	// Event: OnHeaderReply
-	// Doc: https://docs.aahframework.org/server-extension.html#event-onheaderreply
-	//
 	// he.OnHeaderReply(myserverext.OnHeaderReply)
-
-	// Event: OnPostReply
-	// Doc: https://docs.aahframework.org/server-extension.html#event-onpostreply
-	//
 	// he.OnPostReply(myserverext.OnPostReply)
-
-	// Event: OnPreAuth
-	// Doc: https://docs.aahframework.org/server-extension.html#event-onpreauth
-	//
 	// he.OnPreAuth(myserverext.OnPreAuth){{ if .App.IsSecurityEnabled }}
-
-	// Event: OnPostAuth
-	// Doc: https://docs.aahframework.org/server-extension.html#event-onpostauth
-	//
 	he.OnPostAuth(security.PostAuthEvent){{ else }}
-
-	// Event: OnPostAuth
-	// Doc: https://docs.aahframework.org/server-extension.html#event-onpostauth
-	//
 	// he.OnPostAuth(myserverext.PostAuthEvent){{ end }}
 }
 {{ end }}{{ if or .App.IsWebSocketApp .App.IsSubTypeWebSocket }}
 
-//‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
-// WebSocket Events
-// Doc: https://docs.aahframework.org/websocket.html#events
+// SubscribeWebSocketEvents method subscribes to WebSocket events on app start.
 //
-// Subscribing WebSocket events on app start.
-//__________________________________________________________________________
-
+// Doc: https://docs.aahframework.org/websocket.html#events
 func SubscribeWebSocketEvents(_ *aah.Event) {
-  // wse := aah.AppWSEngine()
-
-	// Custom ID Generator
-	//
-  // wse.SetIDGenerator(websockets.MyCustomIDGenerator)
-
-  // Event: OnPreConnect
-	//
+  // wse := aah.App().WSEngine()
   // wse.OnPreConnect(mywebsockets.HandleEvents)
-
-  // Event: OnPostConnect
-  //
   // wse.OnPostConnect(mywebsockets.HandleEvents)
-
-  // Event: OnPostDisconnect
-  //
   // wse.OnPostDisconnect(mywebsockets.HandleEvents)
-
-  // Event: OnError
-  //
   // wse.OnError(mywebsockets.HandleEvents)
+
+  // Custom ID Generator
+  // wse.SetIDGenerator(websockets.MyCustomIDGenerator)
 }{{ end }}

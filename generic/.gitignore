@@ -1,11 +1,13 @@
 # .gitignore config
 
-# aah application
+# aah application - start
 aah.go
 aah_*_vfs.go
 *.pid
+app/generated
 build/
 vendor/*/
+# aah application - end
 
 # Compiled Object files, Static and Dynamic libs (Shared Objects)
 *.o
