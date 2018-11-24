@@ -15,8 +15,8 @@ desc = "aah {{ .App.Type }} application"
 # Application binary usage
 usage = "{{ .App.Name }} is wonderful application"
 
-# Application copyrights information
-copyrights = "© 2018 aah framework"
+# Application copyright information
+copyright = "© 2018 aah framework"
 
 # Application type, typically these `web`, `api`, `websocket`
 type = "{{ .App.Type }}"
