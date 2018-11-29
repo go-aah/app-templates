@@ -16,7 +16,7 @@ build {
   #binary_name = "{{ .App.Name }}"
 
   # Used as fallback version, if
-  #   - `AAH_APP_VERSION` environment value
+  #   - `AAH_APP_VERSION` environment variable
   #   - `git commit sha`
   # Not available
   version = "0.0.1"
