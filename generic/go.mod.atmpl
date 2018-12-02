@@ -1,6 +1,6 @@
 module {{ .App.ImportPath }}
 
 require (
-	aahframe.work v0.0.0-20181201055213-0ff7060c809f {{ if .App.IsWebApp }}
-	aahframe.work/minify/html v0.0.0-20181103214207-e165c0fdbcbf{{ end }}
+	aahframe.work v0.12.0 {{ if .App.IsWebApp }}
+	aahframe.work/minify/html v0.1.0{{ end }}
 )
