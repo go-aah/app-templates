@@ -16,7 +16,7 @@ desc = "aah {{ .App.Type }} application"
 usage = "{{ .App.Name }} is wonderful application"
 
 # Application copyright information
-copyright = "© {{ if .App.CurrentYear }}.App.CurrentYear {{ end }}aah framework"
+copyright = "© {{ if .App.CurrentYear }}{{ .App.CurrentYear }} {{ end }}aah framework"
 
 # Application type, typically these `web`, `api`, `websocket`
 type = "{{ .App.Type }}"
