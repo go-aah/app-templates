@@ -27,8 +27,8 @@ build {
   # Default value is `true` since v0.11.0
   #dep_get = true
 
-  # `-i` may not be required for go1.10 and above, however no impact.
-  flags = ["-i"]
+  # Go build flags
+  # flags = ["-v"]
 
   ldflags = ""
 
